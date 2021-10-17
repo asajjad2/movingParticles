@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas{
+            background-color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <canvas width="600" height="600"></canvas>
+    <script>
+        let canvas = document.querySelector('canvas');
+        let context = canvas.getContext('2d');
+        context.fillStyle = "blue";
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const particlesArray = [];
+        let hue = 0;
+
+        let mouse = {
+            x:null,
+            y:null
+        };
+
+        canvas.addEventListener('click',function(e){
+            mouse.x = e.x;
+            mouse.y = e.y;
+            
+        });
+
+        canvas.addEventListener('mousemove',function(e){
+            mouse.x = e.x;
+            mouse.y = e.y;
+            for(let i=0;i<5;i++){
+                particlesArray.push(new Particle());
+            }
+        });
+        
+        function displayCircle(){
+            context.fillStyle = "#FFFFFF";
+            context.beginPath();
+            context.arc(mouse.x,mouse.y,10,0,Math.PI * 2);
+            context.fill();
+        }
+
+        
+
+        
+
+        class Particle{
+
+            constructor(){
+                this.x = mouse.x;
+                this.y = mouse.y;
+                // this.x = Math.random() * canvas.width;
+                // this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 15 + 1;
+                this.speedX  = Math.random() * 3 - 1.5;
+                this.speedY  = Math.random() * 3 - 1.5;
+            }
+
+            update(){
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if(this.size > 0.2)this.size-=0.1;
+            }
+
+            draw(){
+                context.fillStyle = "hsl(" + hue + ",100%,50%)";
+                context.beginPath();
+                context.arc(this.x,this.y,this.size,0,Math.PI * 2);
+                context.fill();
+            }
+
+        };
+
+        // function init(){
+        //     for(let i=0;i<100;i++){
+        //         particlesArray.push(new Particle());
+        //     }
+        // }
+
+        function handleParticles(){
+            for(let i=0;i<particlesArray.length;i++){
+                particlesArray[i].update();
+                particlesArray[i].draw();
+                if(particlesArray[i].size<=0.3){
+                    particlesArray.splice(i,1);
+                    i--;
+                }
+            }
+        }
+
+        // init();
+
+        function animate(){
+            // context.clearRect(0,0,canvas.width,canvas.height);
+            context.fillStyle = 'rgba(0,0,0,0.02)';
+            context.fillRect(0,0,canvas.width,canvas.height);
+            displayCircle();
+            handleParticles();
+            hue++;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+        // context.lineWidth = 4; //defines width of stroke
+        // context.beginPath(); 
+        // context.rect(100,100,400,400);
+        // // context.stroke(); //border
+
+        // context.beginPath();
+        // context.arc(300,300,100,0,Math.PI * 2);
+        //context.stroke();
+
+        // for(let i=0;i<5;i++){
+
+        //     let startingPointX = 100;
+        //     let startingPointY = 100;
+        //     let width = 50;
+        //     let height = 50;
+        //     let gap = 15;
+
+        //     let x = startingPointX + ((width+gap)*i);
+        //     let y = startingPointY + ((height+gap)*i);
+            
+        //     context.beginPath();
+        //     context.rect(x,y,width,height);
+        //     context.stroke();
+
+        // }
+
+        // const startingPointX = 100;
+        // const startingPointY = 100;
+        // const width = 50;
+        // const height = 50;
+        // const gap = 15;
+
+        // for(let i=0;i<5;i++){
+
+        //     for(let j=0;j<5;j++){
+                
+
+        //         let x = startingPointX + ((width+gap)*i);
+        //         let y = startingPointY + ((height+gap)*j);
+        //         // context.lineWidth = Math.random() * 3;
+        //         context.beginPath();
+        //         context.rect(x,y,width,height);
+        //         context.stroke();
+
+        //         // if(j>0&&j<4){
+        //         //     context.beginPath();
+        //         //     context.rect(x+8,y+8,width-16,height-16);
+        //         //     context.stroke();
+        //         // }
+
+        //         if(Math.random() > 0.5){
+        //             // context.lineWidth = Math.random() * 10;
+        //             context.beginPath();
+        //             context.rect(x+8,y+8,width-16,height-16);
+        //             context.stroke();
+        //         }
+                
+        //     }
+            
+
+        // }
+
+    </script>
+</body>
+</html>
